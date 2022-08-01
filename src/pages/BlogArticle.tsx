@@ -1,4 +1,4 @@
-import { Component, Show, createMemo, PropsWithChildren } from 'solid-js';
+import { Component, Show, createMemo } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 import { useRouteData, NavLink } from 'solid-app-router';
 import { useRouteReadyState } from '../utils/routeReadyState';
@@ -15,8 +15,6 @@ export const BlogArticle: Component = () => {
     t('global.dir', {}, 'ltr') == 'rtl' ? 'chevron-right' : 'chevron-left',
   );
   const context = useAppContext();
-
-  const Article = data.article!;
 
   return (
     <div class="flex flex-col">
@@ -43,22 +41,22 @@ export const BlogArticle: Component = () => {
                 </div>
                 <hr class="mt-10 w-3/6 mx-auto" />
                 <article class="my-10 prose dark:prose-invert mx-auto">
-                  <Article
-                    components={{
-                      ListenNotesEpisode,
-                      Tweet: (props: PropsWithChildren) => (
-                        <Tweet
-                          {...props}
-                          theme={context.isDark ? 'dark' : 'light'}
-                          align="center"
-                        />
-                      ),
-                      YouTube,
-                      Twitch: (props: PropsWithChildren) => (
-                        <Twitch {...props} parent={location.hostname} />
-                      ),
-                    }}
-                  />
+                  {data.article && (
+                    <data.article
+                      components={{
+                        ListenNotesEpisode,
+                        Tweet: (props) => (
+                          <Tweet
+                            {...props}
+                            theme={context.isDark ? 'dark' : 'light'}
+                            align="center"
+                          />
+                        ),
+                        YouTube,
+                        Twitch: (props) => <Twitch {...props} parent={location.hostname} />,
+                      }}
+                    />
+                  )}
                 </article>
                 <hr class="mt-10 w-3/6 mx-auto" />
                 <div class="flex flex-row justify-center mt-10">
