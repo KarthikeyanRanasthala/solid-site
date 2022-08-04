@@ -1,9 +1,13 @@
-import { defineConfig } from 'vite';
+import { defineConfig, PluginOption } from 'vite';
 import solid from 'vite-plugin-solid';
 import mdx from '@mdx-js/rollup';
 import remarkGfm from 'remark-gfm';
 
 export default defineConfig({
+  define: {
+    __UPDATED_AT__: JSON.stringify(new Date().toLocaleString()),
+    __SOLID_VERSION__: JSON.stringify('1.4.7'),
+  },
   plugins: [
     {
       ...mdx({
@@ -13,7 +17,7 @@ export default defineConfig({
         remarkPlugins: [remarkGfm],
       }),
       enforce: 'pre',
-    },
+    } as PluginOption,
     solid({ extensions: ['.md', '.mdx'] }),
     // VitePWA(pwaOptions),
   ],
@@ -22,20 +26,6 @@ export default defineConfig({
     exclude: ['@solid.js/docs'],
   },
   build: {
-    polyfillDynamicImport: false,
     target: 'esnext',
-    terserOptions: {
-      compress: {
-        unsafe: true,
-        unsafe_arrows: true,
-        unsafe_Function: true,
-        unsafe_math: true,
-        unsafe_symbols: true,
-        unsafe_methods: true,
-        unsafe_proto: true,
-        unsafe_regexp: true,
-        passes: 3,
-      },
-    },
   },
 });
